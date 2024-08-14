@@ -1,22 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark:bg-gray-900 dark:text-gray-200">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CryptoJS Interactive Form</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+
+        localStorage.theme = 'light'
+        localStorage.theme = 'dark'
+
+        localStorage.removeItem('theme')
+    </script>
 </head>
-<body class="bg-gray-100 text-gray-800">
+
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200">
     <div class="container mx-auto py-10">
+        <div class="flex justify-end">
+            <!-- Dark Mode Toggle -->
+            <label for="toggleDarkMode" class="cursor-pointer flex items-center">
+                <input type="checkbox" id="toggleDarkMode" class="hidden">
+                <div class="relative">
+                    <div class="block w-10 h-6 bg-gray-300 rounded-full dark:bg-gray-600"></div>
+                    <div
+                        class="absolute left-1 top-1 w-4 h-4 bg-white border border-gray-200 rounded-full transition-transform transform translate-x-0 dark:translate-x-full dark:bg-gray-800">
+                    </div>
+                </div>
+                <span class="ml-3 text-lg">Dark Mode</span>
+            </label>
+        </div>
+
         <h1 class="text-3xl font-bold text-center mb-8">CryptoJS Interactive Form</h1>
-        
-        <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto">
+
+        <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto dark:bg-gray-800 dark:border-gray-700">
             <form id="cryptoForm" class="space-y-6">
                 <!-- Select Algorithm Type -->
                 <div>
                     <label for="algorithmType" class="block text-lg font-medium">Select Algorithm Type:</label>
-                    <select id="algorithmType" name="algorithmType" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <select id="algorithmType" name="algorithmType" required
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                         <option value="">Select...</option>
                         <option value="hashing">Hashing</option>
                         <option value="hmac">HMAC</option>
@@ -25,11 +57,12 @@
                         <option value="encoding">Encoding</option>
                     </select>
                 </div>
-                
+
                 <!-- Hashing Algorithms -->
                 <div id="hashingOptions" style="display:none;">
                     <label for="hashingAlgo" class="block text-lg font-medium">Select Hashing Algorithm:</label>
-                    <select id="hashingAlgo" name="hashingAlgo" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <select id="hashingAlgo" name="hashingAlgo"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                         <option value="MD5">MD5</option>
                         <option value="SHA1">SHA-1</option>
                         <option value="SHA256">SHA-256</option>
@@ -40,11 +73,12 @@
                         <option value="RIPEMD160">RIPEMD-160</option>
                     </select>
                 </div>
-                
+
                 <!-- HMAC Algorithms -->
                 <div id="hmacOptions" style="display:none;">
                     <label for="hmacAlgo" class="block text-lg font-medium">Select HMAC Algorithm:</label>
-                    <select id="hmacAlgo" name="hmacAlgo" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <select id="hmacAlgo" name="hmacAlgo"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                         <option value="HmacMD5">HmacMD5</option>
                         <option value="HmacSHA1">HmacSHA1</option>
                         <option value="HmacSHA256">HmacSHA256</option>
@@ -52,26 +86,30 @@
                     </select>
                     <br>
                     <label for="hmacKey" class="block text-lg font-medium">Enter Secret Passphrase:</label>
-                    <input type="text" id="hmacKey" name="hmacKey" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="text" id="hmacKey" name="hmacKey"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                 </div>
-                
+
                 <!-- PBKDF2 Options -->
                 <div id="pbkdf2Options" style="display:none;">
                     <label for="pbkdf2KeySize" class="block text-lg font-medium">Key Size (bits):</label>
-                    <select id="pbkdf2KeySize" name="pbkdf2KeySize" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <select id="pbkdf2KeySize" name="pbkdf2KeySize"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                         <option value="128">128</option>
                         <option value="256">256</option>
                         <option value="512">512</option>
                     </select>
                     <br>
                     <label for="pbkdf2Iterations" class="block text-lg font-medium">Iterations:</label>
-                    <input type="number" id="pbkdf2Iterations" name="pbkdf2Iterations" value="1000" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="number" id="pbkdf2Iterations" name="pbkdf2Iterations" value="1000"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                 </div>
-                
+
                 <!-- Encryption/Decryption Options -->
                 <div id="encryptionOptions" style="display:none;">
                     <label for="encAlgo" class="block text-lg font-medium">Select Cipher Algorithm:</label>
-                    <select id="encAlgo" name="encAlgo" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <select id="encAlgo" name="encAlgo"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                         <option value="AES">AES</option>
                         <option value="DES">DES</option>
                         <option value="TripleDES">TripleDES</option>
@@ -81,10 +119,12 @@
                     </select>
                     <br>
                     <label for="encPassphrase" class="block text-lg font-medium">Enter Secret Passphrase:</label>
-                    <input type="text" id="encPassphrase" name="encPassphrase" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="text" id="encPassphrase" name="encPassphrase"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                     <br>
                     <label for="encMode" class="block text-lg font-medium">Mode:</label>
-                    <select id="encMode" name="encMode" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <select id="encMode" name="encMode"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                         <option value="CBC">CBC (default)</option>
                         <option value="CFB">CFB</option>
                         <option value="CTR">CTR</option>
@@ -93,7 +133,8 @@
                     </select>
                     <br>
                     <label for="encPadding" class="block text-lg font-medium">Padding:</label>
-                    <select id="encPadding" name="encPadding" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <select id="encPadding" name="encPadding"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                         <option value="Pkcs7">Pkcs7 (default)</option>
                         <option value="Iso97971">Iso97971</option>
                         <option value="AnsiX923">AnsiX923</option>
@@ -103,16 +144,18 @@
                     </select>
                     <br>
                     <label for="encOperation" class="block text-lg font-medium">Operation:</label>
-                    <select id="encOperation" name="encOperation" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <select id="encOperation" name="encOperation"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                         <option value="encrypt">Encrypt</option>
                         <option value="decrypt">Decrypt</option>
                     </select>
                 </div>
-                
+
                 <!-- Encoding Options -->
                 <div id="encodingOptions" style="display:none;">
                     <label for="encFormat" class="block text-lg font-medium">Select Encoding Format:</label>
-                    <select id="encFormat" name="encFormat" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <select id="encFormat" name="encFormat"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                         <option value="Base64">Base64</option>
                         <option value="Hex">Hex</option>
                         <option value="Latin1">Latin1</option>
@@ -121,35 +164,40 @@
                         <option value="Utf16LE">Utf16LE</option>
                     </select>
                 </div>
-                
-                <!-- Common Input -->
+
+                <!-- Message Input -->
                 <div>
                     <label for="message" class="block text-lg font-medium">Enter Your Message:</label>
-                    <input type="text" id="message" name="message" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <textarea id="message" name="message" required rows="4"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"></textarea>
                 </div>
-                
+
+                <!-- Submit Button -->
                 <div class="text-center">
-                    <button type="submit" class="mt-6 bg-indigo-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Submit</button>
+                    <button type="submit"
+                        class="bg-indigo-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-600">Submit</button>
                 </div>
             </form>
-            
+
             <!-- Result Display -->
-            <div id="resultContainer" class="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg" style="display:none;">
+            <div id="resultContainer"
+                class="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg dark:bg-green-900 dark:border-green-700"
+                style="display:none;">
                 <h2 class="text-xl font-semibold">Result:</h2>
-                <pre id="result" class="mt-2 text-green-800 font-mono"></pre>
+                <pre id="result" class="mt-2 text-green-800 font-mono dark:text-green-300"></pre>
             </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('algorithmType').addEventListener('change', function() {
+        document.getElementById('algorithmType').addEventListener('change', function () {
             var selectedValue = this.value;
             document.getElementById('hashingOptions').style.display = 'none';
             document.getElementById('hmacOptions').style.display = 'none';
             document.getElementById('pbkdf2Options').style.display = 'none';
             document.getElementById('encryptionOptions').style.display = 'none';
             document.getElementById('encodingOptions').style.display = 'none';
-            
+
             if (selectedValue === 'hashing') {
                 document.getElementById('hashingOptions').style.display = 'block';
             } else if (selectedValue === 'hmac') {
@@ -163,12 +211,12 @@
             }
         });
 
-        document.getElementById('cryptoForm').addEventListener('submit', function(event) {
+        document.getElementById('cryptoForm').addEventListener('submit', function (event) {
             event.preventDefault();
             var algorithmType = document.getElementById('algorithmType').value;
             var message = document.getElementById('message').value;
             var result = '';
-            
+
             if (algorithmType === 'hashing') {
                 var hashingAlgo = document.getElementById('hashingAlgo').value;
                 result = CryptoJS[hashingAlgo](message).toString();
@@ -189,12 +237,12 @@
                 var encMode = document.getElementById('encMode').value;
                 var encPadding = document.getElementById('encPadding').value;
                 var encOperation = document.getElementById('encOperation').value;
-                
+
                 var options = {
                     mode: CryptoJS.mode[encMode],
                     padding: CryptoJS.pad[encPadding]
                 };
-                
+
                 if (encOperation === 'encrypt') {
                     result = CryptoJS[encAlgo].encrypt(message, encPassphrase, options).toString();
                 } else if (encOperation === 'decrypt') {
@@ -216,10 +264,16 @@
                     result = CryptoJS.enc.Utf16LE.stringify(CryptoJS.enc.Utf8.parse(message));
                 }
             }
-            
+
             document.getElementById('result').textContent = result;
             document.getElementById('resultContainer').style.display = 'block';
         });
+
+        // Toggle dark mode
+        document.getElementById('toggleDarkMode').addEventListener('change', function () {
+            document.documentElement.classList.toggle('dark');
+        });
     </script>
 </body>
+
 </html>
