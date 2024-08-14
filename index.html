@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoJS Interactive Form</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <div class="container mx-auto py-10">
+        <h1 class="text-3xl font-bold text-center mb-8">CryptoJS Interactive Form</h1>
+        
+        <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto">
+            <form id="cryptoForm" class="space-y-6">
+                <!-- Select Algorithm Type -->
+                <div>
+                    <label for="algorithmType" class="block text-lg font-medium">Select Algorithm Type:</label>
+                    <select id="algorithmType" name="algorithmType" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Select...</option>
+                        <option value="hashing">Hashing</option>
+                        <option value="hmac">HMAC</option>
+                        <option value="pbkdf2">PBKDF2</option>
+                        <option value="encryption">Encryption/Decryption</option>
+                        <option value="encoding">Encoding</option>
+                    </select>
+                </div>
+                
+                <!-- Hashing Algorithms -->
+                <div id="hashingOptions" style="display:none;">
+                    <label for="hashingAlgo" class="block text-lg font-medium">Select Hashing Algorithm:</label>
+                    <select id="hashingAlgo" name="hashingAlgo" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="MD5">MD5</option>
+                        <option value="SHA1">SHA-1</option>
+                        <option value="SHA256">SHA-256</option>
+                        <option value="SHA512">SHA-512</option>
+                        <option value="SHA224">SHA-224</option>
+                        <option value="SHA384">SHA-384</option>
+                        <option value="SHA3">SHA-3</option>
+                        <option value="RIPEMD160">RIPEMD-160</option>
+                    </select>
+                </div>
+                
+                <!-- HMAC Algorithms -->
+                <div id="hmacOptions" style="display:none;">
+                    <label for="hmacAlgo" class="block text-lg font-medium">Select HMAC Algorithm:</label>
+                    <select id="hmacAlgo" name="hmacAlgo" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="HmacMD5">HmacMD5</option>
+                        <option value="HmacSHA1">HmacSHA1</option>
+                        <option value="HmacSHA256">HmacSHA256</option>
+                        <option value="HmacSHA512">HmacSHA512</option>
+                    </select>
+                    <br>
+                    <label for="hmacKey" class="block text-lg font-medium">Enter Secret Passphrase:</label>
+                    <input type="text" id="hmacKey" name="hmacKey" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                
+                <!-- PBKDF2 Options -->
+                <div id="pbkdf2Options" style="display:none;">
+                    <label for="pbkdf2KeySize" class="block text-lg font-medium">Key Size (bits):</label>
+                    <select id="pbkdf2KeySize" name="pbkdf2KeySize" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="128">128</option>
+                        <option value="256">256</option>
+                        <option value="512">512</option>
+                    </select>
+                    <br>
+                    <label for="pbkdf2Iterations" class="block text-lg font-medium">Iterations:</label>
+                    <input type="number" id="pbkdf2Iterations" name="pbkdf2Iterations" value="1000" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                
+                <!-- Encryption/Decryption Options -->
+                <div id="encryptionOptions" style="display:none;">
+                    <label for="encAlgo" class="block text-lg font-medium">Select Cipher Algorithm:</label>
+                    <select id="encAlgo" name="encAlgo" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="AES">AES</option>
+                        <option value="DES">DES</option>
+                        <option value="TripleDES">TripleDES</option>
+                        <option value="Rabbit">Rabbit</option>
+                        <option value="RC4">RC4</option>
+                        <option value="RC4Drop">RC4Drop</option>
+                    </select>
+                    <br>
+                    <label for="encPassphrase" class="block text-lg font-medium">Enter Secret Passphrase:</label>
+                    <input type="text" id="encPassphrase" name="encPassphrase" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <br>
+                    <label for="encMode" class="block text-lg font-medium">Mode:</label>
+                    <select id="encMode" name="encMode" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="CBC">CBC (default)</option>
+                        <option value="CFB">CFB</option>
+                        <option value="CTR">CTR</option>
+                        <option value="OFB">OFB</option>
+                        <option value="ECB">ECB</option>
+                    </select>
+                    <br>
+                    <label for="encPadding" class="block text-lg font-medium">Padding:</label>
+                    <select id="encPadding" name="encPadding" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="Pkcs7">Pkcs7 (default)</option>
+                        <option value="Iso97971">Iso97971</option>
+                        <option value="AnsiX923">AnsiX923</option>
+                        <option value="Iso10126">Iso10126</option>
+                        <option value="ZeroPadding">ZeroPadding</option>
+                        <option value="NoPadding">NoPadding</option>
+                    </select>
+                    <br>
+                    <label for="encOperation" class="block text-lg font-medium">Operation:</label>
+                    <select id="encOperation" name="encOperation" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="encrypt">Encrypt</option>
+                        <option value="decrypt">Decrypt</option>
+                    </select>
+                </div>
+                
+                <!-- Encoding Options -->
+                <div id="encodingOptions" style="display:none;">
+                    <label for="encFormat" class="block text-lg font-medium">Select Encoding Format:</label>
+                    <select id="encFormat" name="encFormat" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="Base64">Base64</option>
+                        <option value="Hex">Hex</option>
+                        <option value="Latin1">Latin1</option>
+                        <option value="Utf8">Utf8</option>
+                        <option value="Utf16">Utf16</option>
+                        <option value="Utf16LE">Utf16LE</option>
+                    </select>
+                </div>
+                
+                <!-- Common Input -->
+                <div>
+                    <label for="message" class="block text-lg font-medium">Enter Your Message:</label>
+                    <input type="text" id="message" name="message" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="mt-6 bg-indigo-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Submit</button>
+                </div>
+            </form>
+            
+            <!-- Result Display -->
+            <div id="resultContainer" class="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg" style="display:none;">
+                <h2 class="text-xl font-semibold">Result:</h2>
+                <pre id="result" class="mt-2 text-green-800 font-mono"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('algorithmType').addEventListener('change', function() {
+            var selectedValue = this.value;
+            document.getElementById('hashingOptions').style.display = 'none';
+            document.getElementById('hmacOptions').style.display = 'none';
+            document.getElementById('pbkdf2Options').style.display = 'none';
+            document.getElementById('encryptionOptions').style.display = 'none';
+            document.getElementById('encodingOptions').style.display = 'none';
+            
+            if (selectedValue === 'hashing') {
+                document.getElementById('hashingOptions').style.display = 'block';
+            } else if (selectedValue === 'hmac') {
+                document.getElementById('hmacOptions').style.display = 'block';
+            } else if (selectedValue === 'pbkdf2') {
+                document.getElementById('pbkdf2Options').style.display = 'block';
+            } else if (selectedValue === 'encryption') {
+                document.getElementById('encryptionOptions').style.display = 'block';
+            } else if (selectedValue === 'encoding') {
+                document.getElementById('encodingOptions').style.display = 'block';
+            }
+        });
+
+        document.getElementById('cryptoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var algorithmType = document.getElementById('algorithmType').value;
+            var message = document.getElementById('message').value;
+            var result = '';
+            
+            if (algorithmType === 'hashing') {
+                var hashingAlgo = document.getElementById('hashingAlgo').value;
+                result = CryptoJS[hashingAlgo](message).toString();
+            } else if (algorithmType === 'hmac') {
+                var hmacAlgo = document.getElementById('hmacAlgo').value;
+                var hmacKey = document.getElementById('hmacKey').value;
+                result = CryptoJS[hmacAlgo](message, hmacKey).toString();
+            } else if (algorithmType === 'pbkdf2') {
+                var pbkdf2KeySize = parseInt(document.getElementById('pbkdf2KeySize').value);
+                var pbkdf2Iterations = parseInt(document.getElementById('pbkdf2Iterations').value);
+                result = CryptoJS.PBKDF2(message, CryptoJS.lib.WordArray.random(128 / 8), {
+                    keySize: pbkdf2KeySize / 32,
+                    iterations: pbkdf2Iterations
+                }).toString();
+            } else if (algorithmType === 'encryption') {
+                var encAlgo = document.getElementById('encAlgo').value;
+                var encPassphrase = document.getElementById('encPassphrase').value;
+                var encMode = document.getElementById('encMode').value;
+                var encPadding = document.getElementById('encPadding').value;
+                var encOperation = document.getElementById('encOperation').value;
+                
+                var options = {
+                    mode: CryptoJS.mode[encMode],
+                    padding: CryptoJS.pad[encPadding]
+                };
+                
+                if (encOperation === 'encrypt') {
+                    result = CryptoJS[encAlgo].encrypt(message, encPassphrase, options).toString();
+                } else if (encOperation === 'decrypt') {
+                    result = CryptoJS[encAlgo].decrypt(message, encPassphrase, options).toString(CryptoJS.enc.Utf8);
+                }
+            } else if (algorithmType === 'encoding') {
+                var encFormat = document.getElementById('encFormat').value;
+                if (encFormat === 'Base64') {
+                    result = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(message));
+                } else if (encFormat === 'Hex') {
+                    result = CryptoJS.enc.Hex.stringify(CryptoJS.enc.Utf8.parse(message));
+                } else if (encFormat === 'Latin1') {
+                    result = CryptoJS.enc.Latin1.stringify(CryptoJS.enc.Utf8.parse(message));
+                } else if (encFormat === 'Utf8') {
+                    result = CryptoJS.enc.Utf8.parse(message).toString(CryptoJS.enc.Utf8);
+                } else if (encFormat === 'Utf16') {
+                    result = CryptoJS.enc.Utf16.stringify(CryptoJS.enc.Utf8.parse(message));
+                } else if (encFormat === 'Utf16LE') {
+                    result = CryptoJS.enc.Utf16LE.stringify(CryptoJS.enc.Utf8.parse(message));
+                }
+            }
+            
+            document.getElementById('result').textContent = result;
+            document.getElementById('resultContainer').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
